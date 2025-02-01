@@ -1,0 +1,24 @@
+version: "3.5"
+
+services:
+  colbert:
+    container_name: colbert
+    image: colbert:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - ./.env
+    ports:
+      - "9881:9881"
+    volumes:
+      - "./data:/app/data"                         # Mount local data directory into the container
+      - "./experiments:/app/experiments"           # Mount experiments directory
+      - "./checkpoint/colbertv2.0:/app/checkpoint" # Mount model checkpoints
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia                       # Use the NVIDIA GPU driver
+              count: 1                             # Reserve one GPU for this container
+              capabilities: [ gpu ]                # Specify that a GPU is required
