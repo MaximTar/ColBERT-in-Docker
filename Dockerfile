@@ -4,15 +4,8 @@ FROM nvidia/cuda:11.3.1-cudnn8-devel
 # Add NVIDIA's package signing key for secure package installation
 RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/3bf863cc.pub
 
-# Update package source to avoid issues with deprecated Python 2.7 packages:
-# The python2.7-minimal package for Ubuntu 20.04 is no longer available in the focal-updates repository
-# This might have occurred because Python 2.7 is deprecated and its packages are being phased out
-# Switch to a different mirror where the package is available
-RUN sed -i 's|http://archive.ubuntu.com|http://security.ubuntu.com|g' /etc/apt/sources.list
-
 # Update system packages
-# DEBIAN_FRONTEND=noninteractive prevents interactive prompts during package installations and upgrades
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get upgrade -y
+RUN apt-get update && apt-get upgrade -y
 
 # Set timezone to UTC to avoid interactive prompts during installation
 RUN DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get -y install tzdata && apt-get clean
